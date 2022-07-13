@@ -1,0 +1,56 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+body,
+input {
+  font-family: "Poppins", sans-serif;
+}
+
+input:focus {
+  outline: none;
+}
+
+
+.jbtn {
+  width: 180px;
+  background-image: linear-gradient(-45deg, #04befe 0%, #7f00ff 100%);
+  border: none;
+  outline: none;
+  height: 55px;
+  border-radius: 49px;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin: 10px 0;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.jbtn:hover {
+  background-color: #3c0672;
+}
+
+.wrapper-class {
+  padding: 1rem;
+  border: 1px solid #ccc;
+}
+
+.editor-class {
+  background-color: lightgray;
+  padding: 1rem;
+  border: 1px solid #ccc;
+}
+
+.toolbar-class {
+  border: 1px solid #ccc;
+}
