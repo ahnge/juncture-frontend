@@ -1,3 +1,4 @@
+import { type } from "@testing-library/user-event/dist/type";
 import React from "react";
 
 const Table = ({
@@ -5,20 +6,17 @@ const Table = ({
   prev,
   next,
   handlePaginate,
-  namesToSend,
-  emailsToSend,
-  setNamesToSend,
-  setEmailsToSend,
+  canditatesIdsToSend,
+  setCanditatesIdsToSend,
 }) => {
   const handleCheckBoxClick = (e) => {
-    const applicantName = e.target.dataset.name;
-    const applicantEmail = e.target.dataset.email;
+    const applicantId = e.target.dataset.id;
     if (e.target.checked) {
-      const names = [...namesToSend, applicantName];
-      setNamesToSend(names);
+      const ids = [...canditatesIdsToSend, applicantId];
+      setCanditatesIdsToSend(ids);
     } else {
-      const names = [...namesToSend].filter((n) => n !== applicantName);
-      setNamesToSend(names);
+      const ids = [...canditatesIdsToSend].filter((id) => id !== applicantId);
+      setCanditatesIdsToSend(ids);
     }
   };
 
@@ -29,6 +27,29 @@ const Table = ({
       company: "Juncture",
       email_type: type,
     };
+    console.log(objToSend);
+  };
+
+  const offerAllOrRejectAll = (type) => {
+    let names = [];
+    let emails = [];
+    for (let i = 0; i < canditatesIdsToSend.length; i++) {
+      const id = canditatesIdsToSend[i];
+      canditates.map((c) => {
+        if (c.id == id) {
+          names.push(c.applicant);
+          emails.push(c.email);
+        }
+      });
+    }
+
+    const objToSend = {
+      name: names,
+      to_email: emails,
+      company: "Juncture",
+      email_type: type,
+    };
+
     console.log(objToSend);
   };
 
@@ -47,15 +68,25 @@ const Table = ({
               <th>Work Experience</th>
               <th>Education</th>
               <th>
-                {namesToSend.length ? (
-                  <button className="btn btn-success">Offer All</button>
+                {canditatesIdsToSend.length ? (
+                  <button
+                    className="btn btn-success"
+                    onClick={() => offerAllOrRejectAll("offer")}
+                  >
+                    Offer All
+                  </button>
                 ) : (
                   ""
                 )}
               </th>
               <th>
-                {namesToSend.length ? (
-                  <button className="btn btn-error">Reject All</button>
+                {canditatesIdsToSend.length ? (
+                  <button
+                    className="btn btn-error"
+                    onClick={() => offerAllOrRejectAll("reject")}
+                  >
+                    Reject All
+                  </button>
                 ) : (
                   ""
                 )}
@@ -72,8 +103,7 @@ const Table = ({
                       <input
                         type="checkbox"
                         className="checkbox"
-                        data-name={canditate.applicant}
-                        data-email={canditate.email}
+                        data-id={canditate.id}
                         onClick={(e) => handleCheckBoxClick(e)}
                       />
                     </label>

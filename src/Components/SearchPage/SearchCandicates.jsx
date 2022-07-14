@@ -10,8 +10,7 @@ const SearchCandicates = () => {
   const [prev, setPrev] = useState(null);
   const [error, setError] = useState(null);
   // states for posting offer or reject
-  const [namesToSend, setNamesToSend] = useState([]);
-  const [emailsToSend, setEmailsToSend] = useState([]);
+  const [canditatesIdsToSend, setCanditatesIdsToSend] = useState([]);
 
   // function for fetching canditates
   const fetchCanditates = async (url) => {
@@ -37,6 +36,8 @@ const SearchCandicates = () => {
 
   // function for handling pagination
   const handlePaginate = (url) => {
+    // unmounting offerall and rejectall ui
+    setCanditatesIdsToSend([]);
     try {
       fetchCanditates(url);
     } catch (error) {
@@ -68,10 +69,8 @@ const SearchCandicates = () => {
           next={next}
           handlePaginate={handlePaginate}
           // props for offer or reject
-          namesToSend={namesToSend}
-          emailsToSend={emailsToSend}
-          setNamesToSend={setNamesToSend}
-          setEmailsToSend={setEmailsToSend}
+          canditatesIdsToSend={canditatesIdsToSend}
+          setCanditatesIdsToSend={setCanditatesIdsToSend}
         />
       )}
     </div>
