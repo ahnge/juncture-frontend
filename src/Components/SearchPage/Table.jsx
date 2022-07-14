@@ -1,14 +1,16 @@
-import { type } from "@testing-library/user-event/dist/type";
-import React from "react";
+import React, { useState } from "react";
 
 const Table = ({
   canditates,
+  setCanditates,
   prev,
   next,
   handlePaginate,
   canditatesIdsToSend,
   setCanditatesIdsToSend,
 }) => {
+  // states
+
   const handleCheckBoxClick = (e) => {
     const applicantId = e.target.dataset.id;
     if (e.target.checked) {
@@ -20,25 +22,43 @@ const Table = ({
     }
   };
 
-  const offerOrRejectOne = (name, email, type) => {
+  const offerOrRejectOne = (id, type) => {
+    // getting the canditate
+    const canditate = canditates.filter((c) => c.id == id)[0];
     const objToSend = {
-      name: [name],
-      to_email: [email],
+      name: [canditate.applicant],
+      to_email: [canditate.email],
       company: "Juncture",
       email_type: type,
     };
-    console.log(objToSend);
+    const url = "https://heinhtetnyi.pythonanywhere.com/juncture/send-mail/";
+    // sending obj to backend
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(objToSend),
+    })
+      .then(console.log(`${type} sent successfully`))
+      .catch((err) => console.log(err.message));
+
+    // removing canditate from ui after offer or reject
+    const newCanditates = [...canditates].filter((c) => c.id !== canditate.id);
+    setCanditates(newCanditates);
   };
 
   const offerAllOrRejectAll = (type) => {
     let names = [];
     let emails = [];
+    let ids = [];
     for (let i = 0; i < canditatesIdsToSend.length; i++) {
       const id = canditatesIdsToSend[i];
       canditates.map((c) => {
         if (c.id == id) {
           names.push(c.applicant);
           emails.push(c.email);
+          ids.push(c.id);
         }
       });
     }
@@ -50,7 +70,29 @@ const Table = ({
       email_type: type,
     };
 
-    console.log(objToSend);
+    const url = "https://heinhtetnyi.pythonanywhere.com/juncture/send-mail/";
+    // sending obj to backend
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(objToSend),
+    })
+      .then(console.log(`${type} to all sent successfully`))
+      .catch((err) => console.log(err.message));
+
+    // removing canditates from ui after offer or reject
+    let ca = [...canditates];
+    for (let i = 0; i < ids.length; i++) {
+      let id = ids[i];
+      const newCanditates = ca.filter((c) => c.id !== id);
+      ca = newCanditates;
+    }
+    setCanditates(ca);
+
+    // remove offerall and rejectall btns
+    setCanditatesIdsToSend([]);
   };
 
   return (
@@ -135,13 +177,7 @@ const Table = ({
                   <th>
                     <button
                       className="btn btn-success"
-                      onClick={() =>
-                        offerOrRejectOne(
-                          canditate.applicant,
-                          canditate.email,
-                          "offer"
-                        )
-                      }
+                      onClick={() => offerOrRejectOne(canditate.id, "offer")}
                     >
                       Offer
                     </button>
@@ -149,13 +185,7 @@ const Table = ({
                   <th>
                     <button
                       className="btn btn-error"
-                      onClick={() =>
-                        offerOrRejectOne(
-                          canditate.applicant,
-                          canditate.email,
-                          "reject"
-                        )
-                      }
+                      onClick={() => offerOrRejectOne(canditate.id, "reject")}
                     >
                       Reject
                     </button>

@@ -43,7 +43,6 @@ const SearchCandicates = () => {
     } catch (error) {
       console.log(error);
     }
-    console.log("hello world");
   };
   // END function for handling pagination
 
@@ -65,6 +64,7 @@ const SearchCandicates = () => {
       ) : (
         <Table
           canditates={canditates}
+          setCanditates={setCanditates}
           prev={prev}
           next={next}
           handlePaginate={handlePaginate}
